@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# fzf menu to search for tags in emacs org-mode files that are formatted with the zetteldeft plugin.
+
+function join() {
+	local IFS="$1"
+	shift
+	echo "$*"
+}
+
+function menu() {
+	# Grab the prompt message
+	local prompt="$1"
+	shift
+
+	# Combine the rest of our arguments
+	local items=$(join $'\n' "$@")
+
+	fzf --print-query --prompt "${prompt}" <<<"${items}" | tail -1
+}
+taglist="$(rg -o --no-filename -t org ' \#[a-zA-Z0-9]*\w' | sort | uniq)"
+
+tagchoice=$(menu "Tags: " "$(echo "$taglist" | sed 's/^ *//')")
+[[ -z "$tagchoice" ]] && exit
+
+tagmatches=$(menu "matches: " "$(rg -o -l -t org "$tagchoice")")
+$EDITOR $tagmatches

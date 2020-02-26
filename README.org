@@ -1,0 +1,35 @@
+#+title: fzf-menus
+#+author: Anthony Burton (@anthbrtn)
+#+date: \today
+
+* fzf-menus
+
+This is an assorted collection of menus that use [[https://github.com/junegunn/fzf][junegunn's fzf]] to perform desktop duties like connect to wifi, connect to bluetooth, or manage passwords.
+
+* Installation
+** Prerequisites
++ Well, =fzf=.
++ ~=fzf-bitwarden= requires =bitwarden-cli=~ someday, I will get this script working.
++ =fzf-bluetooth= requires =bluez-utils= or your package manager’s version of =bluez=.
++ =fzf-nmcli= requires =NetworkManager= for the program =nmcli=, as well as =python 3.0+=.
++ =fzf-zetteltags= is pretty niche, and is really just for my own personal use. But if you want to try it out, it’s designed to work with =emacs= and the =zetteldeft= package.
+
+** Usage
+Clone this repository and load the files into =~/.local/bin/= or somewhere else along your =$PATH=.
+
+* Integrating with your desktop
+
+I use these scripts as part of a setup with =sway= and =waybar=. This is what my configuration looks like:
+
+#+begin_example
+set $wifi exec $term --class 'networkwidget' -t 'networkwidget' -e "~/.local/bin/fzf-nmcli"
+set $bluetooth exec $term --class 'bluetoothwidget' -t 'bluetoothwidget' -e '~/.local/bin/fzf-bluetooth'
+
+for_window [title="bluetoothwidget"] border pixel 0, floating enable, resize set 300 200, move position 1300 790
+for_window [title="networkwidget"] border pixel 0, floating enable, resize set 453 500, move position 1380 490
+#+end_example
+
+The dimensions are hard-coded, but you can change to your liking.
+
+* Credits
+Most of these are based off of dmenu or rofi scripts that I adapted to use fzf instead for the sake of having a native wayland option. =fzf-bitwarden= is based off of [[https://github.com/mattydebie/bitwarden-rofi][mattydebbie's bitwarden-rofi]]; =fzf-bluetooth= is based off of [[https://github.com/ClydeDroid/rofi-bluetooth][ClydeDroid's rofi-bluetooth]]; and =fzf-nmcli= is based off of [[https://github.com/firecat53/networkmanager-dmenu][firecat53's network-dmenu]].
